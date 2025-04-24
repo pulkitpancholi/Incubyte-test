@@ -27,6 +27,7 @@ class StringCalculator
     negatives = numbers_array.select { |n| n < 0 }
     raise NegativeNumberError.new(negatives) unless negatives.empty?
 
-    numbers_array.sum
+    # Filter out numbers > 1000 and sum
+    numbers_array.reject { |n| n > 1000 }.sum
   end
 end
