@@ -1,5 +1,11 @@
 # string_calculator.rb
 class StringCalculator
+  class NegativeNumberError < StandardError
+    def initialize(negatives)
+      super("negative numbers not allowed #{negatives.join(', ')}")
+    end
+  end
+
   def self.add(numbers)
     return 0 if numbers.empty?
 
@@ -14,8 +20,13 @@ class StringCalculator
       input = parts[1] || ""
     end
 
-    # Split and sum numbers
-    numbers_array = input.split(/#{delimiter}/)
-    numbers_array.map(&:to_i).sum
+    # Split and convert to numbers
+    numbers_array = input.split(/#{delimiter}/).map(&:to_i)
+
+    # Check for negative numbers
+    negatives = numbers_array.select { |n| n < 0 }
+    raise NegativeNumberError.new(negatives) unless negatives.empty?
+
+    numbers_array.sum
   end
 end
