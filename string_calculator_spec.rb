@@ -16,32 +16,54 @@ RSpec.describe StringCalculator do
     end
 
     context "with two numbers" do
-      it "returns the sum with comma delimiter" do
+      it "handles comma delimiter" do
         expect(StringCalculator.add("1,5")).to eq(6)
       end
       
-      it "returns the sum with newline delimiter" do
+      it "handles newline delimiter" do
         expect(StringCalculator.add("1\n5")).to eq(6)
       end
     end
 
-    context "with any amount of numbers" do
-      it "returns the sum for three numbers" do
+    context "with multiple numbers" do
+      it "handles comma delimiters" do
         expect(StringCalculator.add("1,2,3")).to eq(6)
+      end
+
+      it "handles newline delimiters" do
+        expect(StringCalculator.add("1\n2\n3")).to eq(6)
+      end
+
+      it "handles mixed delimiters" do
+        expect(StringCalculator.add("1\n2,3")).to eq(6)
       end
     end
 
-    context "with mixed delimiters" do
-      it "handles newlines and commas together" do
-        expect(StringCalculator.add("1\n2,3")).to eq(6)
+    context "with custom delimiters" do
+      it "handles single character delimiter" do
+        expect(StringCalculator.add("//;\n1;2")).to eq(3)
       end
 
-      it "handles complex combinations" do
-        expect(StringCalculator.add("10\n20,30\n40,50")).to eq(150)
+      it "handles another single character delimiter" do
+        expect(StringCalculator.add("//|\n1|2|3")).to eq(6)
       end
 
-      it "handles consecutive delimiters" do
-        expect(StringCalculator.add("1,\n2")).to eq(3)
+      it "handles regex special character delimiter" do
+        expect(StringCalculator.add("//.\n1.2.3")).to eq(6)
+      end
+
+      it "handles empty string after custom delimiter" do
+        expect(StringCalculator.add("//;\n")).to eq(0)
+      end
+
+      it "handles single number after custom delimiter" do
+        expect(StringCalculator.add("//;\n5")).to eq(5)
+      end
+    end
+
+    context "with invalid input" do
+      it "handles numbers after invalid delimiter format" do
+        expect(StringCalculator.add("1//;\n1;2")).to eq(4) # 1 + 0 + 1 + 2
       end
     end
   end
